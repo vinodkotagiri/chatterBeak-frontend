@@ -1,34 +1,22 @@
-import React from 'react';
-
-function App() {
-  return (
-    <div className="flex flex-col h-full items-center justify-center bg-gray-200 text-gray-700">
-      <div className="flex items-center">
-        <h1 className="text-6xl font-thin tracking-wider">Create React App + Tailwind CSS</h1>
-      </div>
-      <p className="my-6 tracking-wide">
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <div className="mt-6 flex justify-center">
-        <a
-          className="uppercase hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="ml-10 uppercase hover:underline"
-          href="https://tailwindcss.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Tailwind
-        </a>
-      </div>
-    </div>
-  );
+import React, { useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { Route, Routes } from 'react-router'
+import { Register, Login, Dashboard } from './pages'
+import { setUser } from './redux/features/authSlice'
+export default function App() {
+	const dispatch = useDispatch()
+	useEffect(() => {
+		if (localStorage.getItem('auth')) dispatch(setUser(JSON.parse(localStorage.getItem('auth'))))
+	}, [])
+	return (
+		<>
+			<Routes>
+				<Route path='/login' element={<Login />} />
+				<Route path='/register' element={<Register />} />
+				<Route path='/dashboard' element={<Dashboard />} />
+			</Routes>
+			<Toaster position='top-center' reverseOrder={false} />
+		</>
+	)
 }
-
-export default App;
