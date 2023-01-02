@@ -18,11 +18,11 @@ export default function Login() {
 	const handleLogin = () => {
 		login({ email, password })
 			.then((response) => {
-				dispatch(setUser(response.data))
+				dispatch(setUser(response?.data))
 				toast.success('Login succesful!')
 				navigate('/dashboard')
 			})
-			.catch((error) => toast.error(error.response.data))
+			.catch((error) => toast.error(error?.response?.data))
 	}
 
 	return (
