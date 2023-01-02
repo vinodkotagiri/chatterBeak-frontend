@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Avatar, ToolTip, InvitationDecisionButtons } from '../components'
-export default function PendingInvitationItem({
-	id,
-	userName,
-	email,
-	acceptInvitation = () => {},
-	rejectInvitation = () => {},
-}) {
+import { acceptInvitation, rejectInvitation } from '../services/friendInvitationServices'
+export default function PendingInvitationItem({ id, userName, email }) {
 	const [buttonsDisabled, setButtonsDisabled] = useState(false)
 	const handleAcceptInvitation = () => {
-		acceptInvitation({ id })
+		acceptInvitation(id)
+			.then((response) => toast.success(response.data))
+			.catch((error) => toast.error(error?.response.data))
 		setButtonsDisabled(true)
 	}
-	const handleRejectInvitation = (id) => {
-		rejectInvitation({ id })
+	const handleRejectInvitation = () => {
+		rejectInvitation(id)
+			.then((response) => toast.success(response.data))
+			.catch((error) => toast.error(error?.response.data))
 		setButtonsDisabled(true)
 	}
 	return (
@@ -23,11 +23,13 @@ export default function PendingInvitationItem({
 					<Avatar userName={userName} />
 					<div className='ml-2 font-bold text-[#8e9297] text-left'>{userName}</div>
 				</div>
-				<InvitationDecisionButtons
-					disabled={buttonsDisabled}
-					acceptInvitation={handleAcceptInvitation}
-					rejectInvitation={handleRejectInvitation}
-				/>
+				<div className='flex items-center h-12 mt-3'>
+					<InvitationDecisionButtons
+						disabled={buttonsDisabled}
+						acceptInvitation={handleAcceptInvitation}
+						rejectInvitation={handleRejectInvitation}
+					/>
+				</div>
 			</div>
 		</ToolTip>
 	)

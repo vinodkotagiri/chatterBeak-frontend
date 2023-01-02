@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { FriendsListItem } from '../components'
-const DUMMY_FRIENDS = [
-	{ id: 1, userName: 'Mark', isOnline: true },
-	{ id: 2, userName: 'Jason', isOnline: false },
-	{ id: 3, userName: 'Rosy', isOnline: true },
-]
 export default function FriendsList() {
+	const { friends, onlineUsers } = useSelector((state) => state.friendInvitation)
+	const [onlineFriends, setOnlineFriends] = useState([])
+	useEffect(() => {
+		checkIfOnline(friends, onlineFriends)
+	}, [friends, onlineUsers])
+	const checkIfOnline = (friends = [], onlineFriends = []) => {
+		const onlineFriendsList = []
+		friends.forEach((friend) => {
+			const isUserOnline = onlineUsers.find((user) => user.userId === friend.id)
+			if (isUserOnline) onlineFriendsList.push({ ...friend, isOnline: true })
+			else onlineFriendsList.push({ ...friend, isOnline: false })
+		})
+		setOnlineFriends(onlineFriendsList)
+	}
 	return (
 		<div className='grow w-full'>
-			{DUMMY_FRIENDS.map((friend) => (
+			{onlineFriends?.map((friend) => (
 				<FriendsListItem key={friend.id} id={friend.id} name={friend.userName} isOnline={friend.isOnline} />
 			))}
 		</div>
